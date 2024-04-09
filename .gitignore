@@ -2,7 +2,7 @@
 *.class
 
 #.idea directory
-.idea/
+../.idea/
 
 # Generated files
 target/
