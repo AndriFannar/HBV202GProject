@@ -1,4 +1,6 @@
 package is.hi.hbv202g.tictactoe;
 
-public class Token {
+public enum Token {
+    X,
+    O;
 }
