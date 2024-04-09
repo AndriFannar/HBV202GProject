@@ -1,4 +1,5 @@
 package is.hi.hbv202g.tictactoe;
 
-public class Gameboard {
+public class Gameboard
+{
 }
