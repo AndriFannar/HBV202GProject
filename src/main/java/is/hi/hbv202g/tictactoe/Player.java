@@ -41,12 +41,9 @@ public class Player
         this.losses++;
     }
 
-    // ef við viljum byrja upp á nýtt, kannski þurfum við þetta ekki
     public void reset()
     {
         this.wins = 0;
         this.losses = 0;
     }
-
-
 }
