@@ -1,6 +1,8 @@
-package is.hi.hbv202g.tictactoe;
+package is.hi.hbv202g.tictactoe.model;
 
-public class Gameboard
+import is.hi.hbv202g.tictactoe.model.observer.Observable;
+
+public class Gameboard extends Observable
 {
     private final int BOARD_SIZE = 3;
     private Token[][] board;
@@ -34,6 +36,8 @@ public class Gameboard
                 board[i][j] = Token.EMPTY;
             }
         }
+
+        notifyObservers();
     }
 
     // tékka hvort búið sé að setja í alla reitina (jafntefli)
@@ -62,5 +66,6 @@ public class Gameboard
     public void setToken(int i, int j, Token token)
     {
         board[i][j] = token;
+        notifyObservers();
     }
 }

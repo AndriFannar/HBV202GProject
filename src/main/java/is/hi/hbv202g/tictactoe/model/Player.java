@@ -1,4 +1,4 @@
-package is.hi.hbv202g.tictactoe;
+package is.hi.hbv202g.tictactoe.model;
 
 public class Player
 {
