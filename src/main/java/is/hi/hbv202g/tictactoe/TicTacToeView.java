@@ -21,7 +21,7 @@ public class TicTacToeView
 
         String playerToken = "";
 
-        while (!playerToken.equals("X") && !playerToken.equals("O"))
+        while (!playerToken.equalsIgnoreCase("x") && !playerToken.equalsIgnoreCase("O"))
         {
             playerToken = getUserInput();
         }
