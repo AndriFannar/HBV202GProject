@@ -11,11 +11,15 @@ import java.util.Scanner;
 public class TicTacToeView implements Observer
 {
     private TicTacToeController controller;
+    private Scanner scanner;
 
     /**
      * Construct a new TicTacToeView instance.
      */
-    public TicTacToeView() {}
+    public TicTacToeView()
+    {
+        this.scanner = new Scanner(System.in);
+    }
 
     /**
      * Start a game of Tic Tac Toe.
@@ -63,16 +67,15 @@ public class TicTacToeView implements Observer
      */
     private String getUserMove()
     {
-        System.out.print("Enter your move (row column): ");
-
         String move = "";
 
-        while (move.length() != 2 || !Character.isDigit(move.charAt(1))  || !Character.isLetter(move.charAt(0)))
+        while (move.length() != 2 || !Character.isDigit(move.charAt(0))  || !Character.isLetter(move.charAt(1)))
         {
+            System.out.print("Enter your move (row column): ");
             move = getUserInput();
         }
 
-        return getUserInput();
+        return move;
     }
 
 
@@ -83,16 +86,11 @@ public class TicTacToeView implements Observer
      */
     private String getUserInput()
     {
-        Scanner scanner = new Scanner(System.in);
-        String userInput = "";
-
-        if (scanner.hasNextLine())
+        while (true)
         {
-            userInput = scanner.nextLine();
+            if (scanner.hasNextLine())
+                return scanner.nextLine();
         }
-
-        scanner.close();
-        return userInput;
     }
 
     /**
