@@ -70,7 +70,7 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
           <configuration>
-            <mainClass>is.hi.hbv202g.tictactoe.App</mainClass>
+            <mainClass>is.hi.hbv202g.tictactoe.TicTacToeApplication</mainClass>
           </configuration>
         </plugin>
       </plugins>
