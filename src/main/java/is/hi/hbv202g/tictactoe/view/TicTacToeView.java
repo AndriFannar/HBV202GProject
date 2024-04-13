@@ -103,24 +103,27 @@ public class TicTacToeView implements Observer
     public void update()
     {
         Token[][] gameboard = controller.getGameboard();
+        Gameboard gameboard = controller.getGameboard();
+        int boardSize = gameboard.getSize();
 
-        printHorizontalDividers(gameboard[0].length);
+        printHorizontalDividers(boardSize);
 
-        for (int i = 0; i < gameboard.length; i++)
+        for (int i = 0; i < boardSize; i++)
         {
             System.out.print(i + 1 + " |");
 
-            for (int j = 0; j < gameboard[0].length; j++)
+            for (int j = 0; j < boardSize; j++)
             {
                 System.out.print(" " + gameboard[i][j].getSymbol() + " |");
+                Token token = gameboard.getToken(i, j);
+                System.out.print(" " + token.getSymbol() + " |");
             }
-
-            printHorizontalDividers(gameboard[0].length);
+            printHorizontalDividers(boardSize);
         }
 
         System.out.print(" ");
 
-        for (int i = 0; i < gameboard.length; i++)
+        for (int i = 0; i < boardSize; i++)
         {
             String location = String.valueOf((char)(i + 65));
             
