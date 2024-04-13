@@ -14,25 +14,25 @@ The tests are located in the [src/test/java/is/hi/hbv202g/tictactoe](src/test/ja
 To build the project, run the following command in the root directory of the project:
 ```mvn compile```
 
-If you don't have an IDE, you can also build the project using the script file [compile](.\compile.cmd) which is located in the root directory of the project.
+If you don't have an IDE, you can also build the project using the script file [compile](compile.cmd) which is located in the root directory of the project.
 
 ### Run
 To run the project and start the game, run the following command in the root directory of the project:
 ```mvn exec:java```
 
-If you don't have an IDE, you can also run the project using the script file [run](.\run.cmd) which is located in the root directory of the project.
+If you don't have an IDE, you can also run the project using the script file [run](run.cmd) which is located in the root directory of the project.
 
 ### Package
 To package the project into a JAR file, run the following command in the root directory of the project:
 ```mvn package```
 
-If you don't have an IDE, you can also package the project using the script file [package](.\package.cmd) which is located in the root directory of the project.
+If you don't have an IDE, you can also package the project using the script file [package](package.cmd) which is located in the root directory of the project.
 The JAR file will be located in the [target](target/TicTacToe.jar) directory.
 
 ### Run JAR
-To run the JAR file created by Maven, run the script file [runmvnjar](.\runmvnjar.cmd) which is located in the root directory of the project.
+To run the JAR file created by Maven, run the script file [runmvnjar](runmvnjar.cmd) which is located in the root directory of the project.
 
-To run the JAR file created by the script file, run the script file [runjar](.\runjar.cmd) which is located in the root directory of the project.
+To run the JAR file created by the script file, run the script file [runjar](runjar.cmd) which is located in the root directory of the project.
 
 ### Test
 To run the tests for the project, run the following command in the root directory of the project:
