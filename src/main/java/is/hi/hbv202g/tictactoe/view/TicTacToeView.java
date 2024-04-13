@@ -12,6 +12,7 @@ public class TicTacToeView implements Observer
 {
     private TicTacToeController controller;
     private Scanner scanner;
+    private int game;
 
     /**
      * Construct a new TicTacToeView instance.
@@ -26,11 +27,12 @@ public class TicTacToeView implements Observer
      */
     public void startGame()
     {
-        setUpGame();
-        update();
-
-        while (!controller.isGameOver())
-        {
+        if (game == 0) {
+            setUpGame();
+            game++;
+        }
+        while (!controller.isGameOver()) {
+            update();
             String move = getUserMove();
             controller.makeMove(move);
         }
