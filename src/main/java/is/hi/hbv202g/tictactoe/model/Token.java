@@ -13,7 +13,6 @@ public enum Token
             case X     -> "X";
             case O     -> "O";
             case EMPTY -> " ";
-            default    -> "";
         };
     }
 }
