@@ -5,7 +5,6 @@ import is.hi.hbv202g.tictactoe.model.Gameboard;
 import is.hi.hbv202g.tictactoe.model.Token;
 import is.hi.hbv202g.tictactoe.model.observer.Observer;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 public class TicTacToeView implements Observer
@@ -36,6 +35,7 @@ public class TicTacToeView implements Observer
             String move = getUserMove();
             controller.makeMove(move);
         }
+        restartGame();
     }
 
     /**
@@ -45,21 +45,23 @@ public class TicTacToeView implements Observer
     {
         System.out.println("Welcome to Tic Tac Toe!");
 
-        System.out.print("Player 1, please choose a token (X or O): ");
-
-        String playerToken = "";
-
-        while (!playerToken.equalsIgnoreCase("x") && !playerToken.equalsIgnoreCase("O"))
-        {
-            playerToken = getUserInput();
-        }
-
-        Token player1 = Token.valueOf(playerToken);
+        Token player1 = getPlayerToken();
         Token player2 = player1 == Token.X ? Token.O : Token.X;
 
         System.out.println("Player 1 has token " + player1 + " and player 2 has token " + player2 + ".");
 
         controller = new TicTacToeController(player1, player2, this);
+    }
+
+    private Token getPlayerToken() {
+        System.out.print("Player 1, please choose a token (X or O): ");
+
+        String playerToken = "";
+        while (!playerToken.equalsIgnoreCase("x") && !playerToken.equalsIgnoreCase("o")) {
+            playerToken = getUserInput().toUpperCase();
+        }
+
+        return Token.valueOf(playerToken);
     }
 
     /**
@@ -73,7 +75,7 @@ public class TicTacToeView implements Observer
 
         while (move.length() != 2 || !Character.isDigit(move.charAt(0))  || !Character.isLetter(move.charAt(1)))
         {
-            System.out.print("Enter your move (row column): ");
+            System.out.print("Player " + controller.getCurrentPlayerToken() + " - Enter your move (row column): ");
             move = getUserInput();
         }
 
