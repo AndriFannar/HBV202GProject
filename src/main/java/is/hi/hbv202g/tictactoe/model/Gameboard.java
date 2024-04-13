@@ -20,12 +20,6 @@ public class Gameboard extends Observable
         }
     }
 
-    // fall sem TicTacToeView getur kallað á tila prenta svo borðið
-    public Token[][] getGameboard()
-    {
-        return board;
-    }
-
     // ef við viljum geta resettað borðið (nýr leikur)
     public void reset()
     {
@@ -67,5 +61,9 @@ public class Gameboard extends Observable
     {
         board[i][j] = token;
         notifyObservers();
+    }
+
+    public int getSize() {
+        return BOARD_SIZE;
     }
 }
