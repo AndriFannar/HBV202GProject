@@ -7,6 +7,7 @@ import is.hi.hbv202g.tictactoe.model.observer.Observer;
 
 public class TicTacToeController
 {
+    private Gameboard gameboard;
     private Player player1;
     private Player player2;
     private int currentPlayer = 1;
@@ -43,7 +44,6 @@ public class TicTacToeController
             return;
         }
 
-        this.gameboard.setToken(row, col, currentPlayer);
         gameboard.setToken(row, col, getCurrentPlayerToken());
         switchPlayer();
         checkForWinner();
@@ -58,14 +58,6 @@ public class TicTacToeController
         return gameboard.getToken(row, col) == Token.EMPTY;
     }
 
-    /**
-     * Get the current Tokens on the game board.
-     *
-     * @return The game board.
-     */
-    public Token[][] getGameboard()
-    {
-        return this.gameboard.getGameboard();
     private void switchPlayer()
     {
         currentPlayer = (currentPlayer + 1) % 2;
@@ -80,5 +72,15 @@ public class TicTacToeController
     public boolean isGameOver()
     {
         return this.gameOver;
+    /**
+     * Get the current Tokens on the game board.
+     *
+     * @return The game board.
+     */
+    public Gameboard getGameboard()
+    {
+        return gameboard;
+    }
+
     }
 }
