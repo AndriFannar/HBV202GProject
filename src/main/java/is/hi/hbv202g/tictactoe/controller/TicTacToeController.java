@@ -9,9 +9,9 @@ public class TicTacToeController
 {
     private Player player1;
     private Player player2;
-    private final Gameboard gameboard;
-    private int playerTurn = 1;
+    private int currentPlayer = 1;
     private boolean gameOver = false;
+    private int winner = 0;
 
     /**
      * Construct a new TicTacToeController.
@@ -38,11 +38,24 @@ public class TicTacToeController
         int row = Character.getNumericValue(move.charAt(0)) - 1;
         int col = Character.getNumericValue(move.charAt(1)) - 10;
 
-        Token currentPlayer = this.playerTurn == 1 ? this.player1.getToken() : this.player2.getToken();
+        if (!isValidMove(row, col))
+        {
+            return;
+        }
 
         this.gameboard.setToken(row, col, currentPlayer);
+        gameboard.setToken(row, col, getCurrentPlayerToken());
+        switchPlayer();
+        checkForWinner();
 
-        playerTurn = (playerTurn + 1) % 2;
+    }
+    private boolean isValidMove(int row, int col)
+    {
+        if (gameOver || row < 0 || row > 2 || col < 0 || col > 2)
+        {
+            return false;
+        }
+        return gameboard.getToken(row, col) == Token.EMPTY;
     }
 
     /**
@@ -53,6 +66,10 @@ public class TicTacToeController
     public Token[][] getGameboard()
     {
         return this.gameboard.getGameboard();
+    private void switchPlayer()
+    {
+        currentPlayer = (currentPlayer + 1) % 2;
+    }
     }
 
     /**
