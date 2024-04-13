@@ -102,7 +102,6 @@ public class TicTacToeView implements Observer
      */
     public void update()
     {
-        Token[][] gameboard = controller.getGameboard();
         Gameboard gameboard = controller.getGameboard();
         int boardSize = gameboard.getSize();
 
@@ -114,7 +113,6 @@ public class TicTacToeView implements Observer
 
             for (int j = 0; j < boardSize; j++)
             {
-                System.out.print(" " + gameboard[i][j].getSymbol() + " |");
                 Token token = gameboard.getToken(i, j);
                 System.out.print(" " + token.getSymbol() + " |");
             }
@@ -131,6 +129,18 @@ public class TicTacToeView implements Observer
         }
 
         System.out.println();
+    }
+
+    private void restartGame() {
+        displayScores();
+        System.out.println("Would you like to play again? (Y/N)");
+        if ("Y".equalsIgnoreCase(getUserInput())) {
+            controller.startNewGame();
+            startGame();
+        }
+        else {
+            System.out.println("Thanks for playing!");
+        }
     }
 
     /**
