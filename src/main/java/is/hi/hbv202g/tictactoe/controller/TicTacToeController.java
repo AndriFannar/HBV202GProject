@@ -129,6 +129,36 @@ public class TicTacToeController
     }
 
 
+    public void endGame(Token winnerToken)
+    {
+        if (winnerToken != null)
+        {
+            if (winnerToken == player1.getToken())
+            {
+                player1.addWin();
+                winner = 1;
+            }
+            else
+            {
+                player2.addWin();
+                winner = 2;
+            }
+        }
+        gameOver = true;
+        gameboard.notifyObservers();
+    }
+
+    public void startNewGame()
+    {
+        resetGameboard();
+        gameOver = false;
+        currentPlayer = 1;
+        gameboard.notifyObservers();
+    }
+
+    public void resetGameboard()
+    {
+        this.gameboard.reset();
     }
 
     /**
