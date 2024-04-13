@@ -158,4 +158,9 @@ public class TicTacToeView implements Observer
 
         System.out.println();
     }
+    public void displayScores() {
+        System.out.println("Player " + controller.getWinner() + " wins the game!");
+        System.out.printf("Player %d wins: %d\n", 1, controller.getPlayer1Wins());
+        System.out.printf("Player %d wins: %d\n", 2, controller.getPlayer2Wins());
+    }
 }
