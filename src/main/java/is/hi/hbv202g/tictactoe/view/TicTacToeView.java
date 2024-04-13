@@ -52,7 +52,7 @@ public class TicTacToeView implements Observer
             playerToken = getUserInput();
         }
 
-        Token player1 = Token.valueOf(playerToken);
+        Token player1 = Token.valueOf(playerToken.toUpperCase());
         Token player2 = player1 == Token.X ? Token.O : Token.X;
 
         System.out.println("Player 1 has token " + player1 + " and player 2 has token " + player2 + ".");
