@@ -3,6 +3,7 @@
 
 #.idea directory
 .idea/
+tictactoe.iml
 
 # Generated files
 target/
