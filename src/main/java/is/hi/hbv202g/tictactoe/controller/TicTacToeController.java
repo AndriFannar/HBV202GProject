@@ -7,11 +7,12 @@ import is.hi.hbv202g.tictactoe.model.observer.Observer;
 
 public class TicTacToeController
 {
+    private Gameboard gameboard;
     private Player player1;
     private Player player2;
-    private final Gameboard gameboard;
-    private int playerTurn = 1;
+    private int currentPlayer = 1;
     private boolean gameOver = false;
+    private int winner = 0;
 
     /**
      * Construct a new TicTacToeController.
@@ -38,21 +39,126 @@ public class TicTacToeController
         int row = Character.getNumericValue(move.charAt(0)) - 1;
         int col = Character.getNumericValue(move.charAt(1)) - 10;
 
-        Token currentPlayer = this.playerTurn == 1 ? this.player1.getToken() : this.player2.getToken();
+        if (!isValidMove(row, col))
+        {
+            return;
+        }
 
-        this.gameboard.setToken(row, col, currentPlayer);
+        gameboard.setToken(row, col, getCurrentPlayerToken());
+        switchPlayer();
+        checkForWinner();
 
-        playerTurn = (playerTurn + 1) % 2;
+    }
+    private boolean isValidMove(int row, int col)
+    {
+        if (gameOver || row < 0 || row > 2 || col < 0 || col > 2)
+        {
+            return false;
+        }
+        return gameboard.getToken(row, col) == Token.EMPTY;
     }
 
-    /**
-     * Get the current Tokens on the game board.
-     *
-     * @return The game board.
-     */
-    public Token[][] getGameboard()
+    private void switchPlayer()
     {
-        return this.gameboard.getGameboard();
+        currentPlayer = (currentPlayer + 1) % 2;
+    }
+    public void checkForWinner()
+    {
+        Gameboard gameboard = getGameboard();
+        Token winner = checkRows(gameboard);
+        if (winner == null)
+        {
+            winner = checkColumns(gameboard);
+        }
+        if (winner == null)
+        {
+            winner = checkDiagonals(gameboard);
+        }
+        if (winner != null)
+        {
+            endGame(winner);
+        }
+        else if (gameboard.isFull())
+        {
+            endGame(null);
+        }
+    }
+    private Token checkRows(Gameboard gameboard)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (gameboard.getToken(i, 0) != Token.EMPTY &&
+                    gameboard.getToken(i, 0) == gameboard.getToken(i, 1) &&
+                    gameboard.getToken(i, 1) == gameboard.getToken(i, 2))
+            {
+                return gameboard.getToken(i, 0);
+            }
+        }
+        return null;
+    }
+    private Token checkColumns(Gameboard gameboard)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (gameboard.getToken(0, i) != Token.EMPTY &&
+                    gameboard.getToken(0, i) == gameboard.getToken(1, i) &&
+                    gameboard.getToken(1, i) == gameboard.getToken(2, i))
+            {
+                return gameboard.getToken(0, i);
+            }
+        }
+        return null;
+    }
+
+    private Token checkDiagonals(Gameboard gameboard)
+    {
+        if (gameboard.getToken(0, 0) != Token.EMPTY &&
+                gameboard.getToken(0, 0) == gameboard.getToken(1, 1) &&
+                gameboard.getToken(1, 1) == gameboard.getToken(2, 2))
+        {
+            return gameboard.getToken(0, 0);
+        }
+
+        if (gameboard.getToken(0, 2) != Token.EMPTY &&
+                gameboard.getToken(0, 2) == gameboard.getToken(1, 1) &&
+                gameboard.getToken(1, 1) == gameboard.getToken(2, 0))
+        {
+            return gameboard.getToken(0, 2);
+        }
+        return null;
+    }
+
+
+    public void endGame(Token winnerToken)
+    {
+        if (winnerToken != null)
+        {
+            if (winnerToken == player1.getToken())
+            {
+                player1.addWin();
+                winner = 1;
+            }
+            else
+            {
+                player2.addWin();
+                winner = 2;
+            }
+        }
+        gameOver = true;
+        gameboard.notifyObservers();
+    }
+
+    public void startNewGame()
+    {
+        resetGameboard();
+        gameOver = false;
+        currentPlayer = 1;
+        gameboard.notifyObservers();
+    }
+
+    public void resetGameboard()
+    {
+        this.gameboard.reset();
     }
 
     /**
@@ -63,5 +169,32 @@ public class TicTacToeController
     public boolean isGameOver()
     {
         return this.gameOver;
+    }
+
+    /**
+     * Get the current Tokens on the game board.
+     *
+     * @return The game board.
+     */
+    public Gameboard getGameboard()
+    {
+        return gameboard;
+    }
+
+    public Token getCurrentPlayerToken()
+    {
+        return currentPlayer == 1 ? player1.getToken() : player2.getToken();
+    }
+    public int getPlayer1Wins() {
+        return player1.getWins();
+    }
+
+    public int getPlayer2Wins() {
+        return player2.getWins();
+    }
+
+    public int getWinner()
+    {
+        return winner;
     }
 }

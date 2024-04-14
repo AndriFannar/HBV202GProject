@@ -5,13 +5,13 @@ import is.hi.hbv202g.tictactoe.model.Gameboard;
 import is.hi.hbv202g.tictactoe.model.Token;
 import is.hi.hbv202g.tictactoe.model.observer.Observer;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 public class TicTacToeView implements Observer
 {
     private TicTacToeController controller;
     private Scanner scanner;
+    private int game;
 
     /**
      * Construct a new TicTacToeView instance.
@@ -26,14 +26,16 @@ public class TicTacToeView implements Observer
      */
     public void startGame()
     {
-        setUpGame();
-        update();
-
-        while (!controller.isGameOver())
-        {
+        if (game == 0) {
+            setUpGame();
+            game++;
+        }
+        while (!controller.isGameOver()) {
+            update();
             String move = getUserMove();
             controller.makeMove(move);
         }
+        restartGame();
     }
 
     /**
@@ -42,7 +44,6 @@ public class TicTacToeView implements Observer
     private void setUpGame()
     {
         System.out.println("Welcome to Tic Tac Toe!");
-
         System.out.print("Player 1, please choose a token (X or O): ");
 
         String playerToken = "";
@@ -60,6 +61,17 @@ public class TicTacToeView implements Observer
         controller = new TicTacToeController(player1, player2, this);
     }
 
+    private Token getPlayerToken() {
+        System.out.print("Player 1, please choose a token (X or O): ");
+
+        String playerToken = "";
+        while (!playerToken.equalsIgnoreCase("x") && !playerToken.equalsIgnoreCase("o")) {
+            playerToken = getUserInput().toUpperCase();
+        }
+
+        return Token.valueOf(playerToken);
+    }
+
     /**
      * Gets the user's move and returns it.
      *
@@ -71,7 +83,7 @@ public class TicTacToeView implements Observer
 
         while (move.length() != 2 || !Character.isDigit(move.charAt(0))  || !Character.isLetter(move.charAt(1)))
         {
-            System.out.print("Enter your move (row column): ");
+            System.out.print("Player " + controller.getCurrentPlayerToken() + " - Enter your move (row column): ");
             move = getUserInput();
         }
 
@@ -98,25 +110,26 @@ public class TicTacToeView implements Observer
      */
     public void update()
     {
-        Token[][] gameboard = controller.getGameboard();
+        Gameboard gameboard = controller.getGameboard();
+        int boardSize = gameboard.getSize();
 
-        printHorizontalDividers(gameboard[0].length);
+        printHorizontalDividers(boardSize);
 
-        for (int i = 0; i < gameboard.length; i++)
+        for (int i = 0; i < boardSize; i++)
         {
             System.out.print(i + 1 + " |");
 
-            for (int j = 0; j < gameboard[0].length; j++)
+            for (int j = 0; j < boardSize; j++)
             {
-                System.out.print(" " + gameboard[i][j].getSymbol() + " |");
+                Token token = gameboard.getToken(i, j);
+                System.out.print(" " + token.getSymbol() + " |");
             }
-
-            printHorizontalDividers(gameboard[0].length);
+            printHorizontalDividers(boardSize);
         }
 
         System.out.print(" ");
 
-        for (int i = 0; i < gameboard.length; i++)
+        for (int i = 0; i < boardSize; i++)
         {
             String location = String.valueOf((char)(i + 65));
             
@@ -124,6 +137,18 @@ public class TicTacToeView implements Observer
         }
 
         System.out.println();
+    }
+
+    private void restartGame() {
+        displayScores();
+        System.out.println("Would you like to play again? (Y/N)");
+        if ("Y".equalsIgnoreCase(getUserInput())) {
+            controller.startNewGame();
+            startGame();
+        }
+        else {
+            System.out.println("Thanks for playing!");
+        }
     }
 
     /**
@@ -140,5 +165,10 @@ public class TicTacToeView implements Observer
         }
 
         System.out.println();
+    }
+    public void displayScores() {
+        System.out.println("Player " + controller.getWinner() + " wins the game!");
+        System.out.printf("Player %d wins: %d\n", 1, controller.getPlayer1Wins());
+        System.out.printf("Player %d wins: %d\n", 2, controller.getPlayer2Wins());
     }
 }
