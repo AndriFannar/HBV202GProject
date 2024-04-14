@@ -1,32 +1,50 @@
 package is.hi.hbv202g.tictactoe.controller;
 
-import is.hi.hbv202g.tictactoe.model.Gameboard;
+import is.hi.hbv202g.tictactoe.model.GameBoard;
 import is.hi.hbv202g.tictactoe.model.Player;
+import is.hi.hbv202g.tictactoe.model.UserInputCallback;
 import is.hi.hbv202g.tictactoe.model.Token;
-import is.hi.hbv202g.tictactoe.model.observer.Observer;
+import is.hi.hbv202g.tictactoe.model.observer.GameBoardObserver;
+import is.hi.hbv202g.tictactoe.model.observer.ScoreObservable;
+import is.hi.hbv202g.tictactoe.model.observer.ScoreObserver;
 
-public class TicTacToeController
+/**
+ * A controller for a Tic Tac Toe game.
+ */
+public class TicTacToeController extends ScoreObservable
 {
-    private Gameboard gameboard;
+    // Entities
+    private GameBoard gameboard;
     private Player player1;
     private Player player2;
+
+    // Attributes
+    private int winner        = 0;
     private int currentPlayer = 1;
-    private boolean gameOver = false;
-    private int winner = 0;
+    private boolean gameOver  = false;
+
+    private UserInputCallback callback;
 
     /**
      * Construct a new TicTacToeController.
      *
-     * @param player1       The game token for Player 1.
-     * @param player2       The game token for Player 2.
-     * @param boardObserver The observer for the game board.
+     * @param player1                The game token for Player 1.
+     * @param player2                The game token for Player 2.
+     * @param boardSize              The size of the game board.
+     * @param callback               Callback to get User Input from View.
+     * @param boardGameBoardObserver The observer for the game board.
+     * @param scoreObserver          The observer for the score.
      */
-    public TicTacToeController(Token player1, Token player2, Observer boardObserver)
+    public TicTacToeController(Token player1, Token player2, int boardSize, UserInputCallback callback, GameBoardObserver boardGameBoardObserver, ScoreObserver scoreObserver)
     {
         this.player1 = new Player(player1);
         this.player2 = new Player(player2);
-        this.gameboard = new Gameboard();
-        this.gameboard.attach(boardObserver);
+        this.gameboard = new GameBoard(boardSize);
+
+        this.callback = callback;
+        this.gameboard.attach(boardGameBoardObserver);
+
+        attach(scoreObserver);
     }
 
     /**
@@ -47,91 +65,162 @@ public class TicTacToeController
         gameboard.setToken(row, col, getCurrentPlayerToken());
         switchPlayer();
         checkForWinner();
-
     }
+
+    /**
+     * Check if a move is valid.
+     *
+     * @param row The row the move is in.
+     * @param col The column the move is in.
+     * @return    True if the move is valid, false otherwise.
+     */
     private boolean isValidMove(int row, int col)
     {
-        if (gameOver || row < 0 || row > 2 || col < 0 || col > 2)
+        int size = gameboard.getSize();
+
+        if (gameOver || row < 0 || row > size || col < 0 || col > size)
         {
             return false;
         }
+
         return gameboard.getToken(row, col) == Token.EMPTY;
     }
 
+    /**
+     * Switch the player making the next move.
+     */
     private void switchPlayer()
     {
         currentPlayer = (currentPlayer + 1) % 2;
     }
+
+    /**
+     * Check if the game has been won.
+     */
     public void checkForWinner()
     {
-        Gameboard gameboard = getGameboard();
-        Token winner = checkRows(gameboard);
-        if (winner == null)
+        Token[] winner = new Token[3];
+        winner[0] = checkRows();
+        winner[1] = checkColumns();
+        winner[2] = checkDiagonals();
+
+        for (Token token : winner)
         {
-            winner = checkColumns(gameboard);
-        }
-        if (winner == null)
-        {
-            winner = checkDiagonals(gameboard);
-        }
-        if (winner != null)
-        {
-            endGame(winner);
-        }
-        else if (gameboard.isFull())
-        {
-            endGame(null);
-        }
-    }
-    private Token checkRows(Gameboard gameboard)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            if (gameboard.getToken(i, 0) != Token.EMPTY &&
-                    gameboard.getToken(i, 0) == gameboard.getToken(i, 1) &&
-                    gameboard.getToken(i, 1) == gameboard.getToken(i, 2))
+            if (token != Token.EMPTY)
             {
-                return gameboard.getToken(i, 0);
+                endGame(token);
+                return;
             }
         }
-        return null;
-    }
-    private Token checkColumns(Gameboard gameboard)
-    {
-        for (int i = 0; i < 3; i++)
+
+        if (gameboard.isFull())
         {
-            if (gameboard.getToken(0, i) != Token.EMPTY &&
-                    gameboard.getToken(0, i) == gameboard.getToken(1, i) &&
-                    gameboard.getToken(1, i) == gameboard.getToken(2, i))
+            endGame(Token.EMPTY);
+        }
+    }
+
+    /**
+     * Check the rows of the game board for a winner.
+     *
+     * @return The winning token, or Token.EMPTY if there is no winner.
+     */
+    private Token checkRows()
+    {
+        for (Token[] tokenRow : gameboard.getBoardState())
+        {
+            Token firstToken = tokenRow[0];
+            
+            if (firstToken != Token.EMPTY)
             {
-                return gameboard.getToken(0, i);
+                for (Token token : tokenRow)
+                {
+                    if (!token.getSymbol().equals(firstToken.getSymbol()))
+                    {
+                        firstToken = Token.EMPTY;
+                        break;
+                    }
+                }
+
+                if (firstToken != Token.EMPTY)
+                    return firstToken;
             }
         }
-        return null;
+
+        return Token.EMPTY;
     }
 
-    private Token checkDiagonals(Gameboard gameboard)
+    /**
+     * Check the columns of the game board for a winner.
+     *
+     * @return The winning token, or Token.EMPTY if there is no winner.
+     */
+    private Token checkColumns()
     {
-        if (gameboard.getToken(0, 0) != Token.EMPTY &&
-                gameboard.getToken(0, 0) == gameboard.getToken(1, 1) &&
-                gameboard.getToken(1, 1) == gameboard.getToken(2, 2))
+        for (int i = 0; i < gameboard.getSize(); i++)
         {
-            return gameboard.getToken(0, 0);
-        }
+            Token firstToken = gameboard.getToken(0, i);
+            
+            if (firstToken != Token.EMPTY)
+            {
+                for (int j = 0; j < gameboard.getSize(); j++)
+                {
+                    if (!gameboard.getToken(j, i).getSymbol().equals(firstToken.getSymbol()))
+                    {
+                        firstToken = Token.EMPTY;
+                        break;
+                    }
+                }
+            }
 
-        if (gameboard.getToken(0, 2) != Token.EMPTY &&
-                gameboard.getToken(0, 2) == gameboard.getToken(1, 1) &&
-                gameboard.getToken(1, 1) == gameboard.getToken(2, 0))
-        {
-            return gameboard.getToken(0, 2);
+            if (firstToken != Token.EMPTY)
+                return firstToken;
         }
-        return null;
+        return Token.EMPTY;
     }
 
+    /**
+     * Check the diagonals of the game board for a winner.
+     *
+     * @return The winning token, or Token.EMPTY if there is no winner.
+     */
+    private Token checkDiagonals()
+    {
+        Token firstTokenUL = gameboard.getToken(0, 0);
+        Token firstTokenUR = gameboard.getToken(0, gameboard.getSize() - 1);
 
+        if (firstTokenUL == Token.EMPTY && firstTokenUR == Token.EMPTY)
+        {
+            return firstTokenUL;
+        }
+
+        for (int i = 0; i < gameboard.getSize(); i++)
+        {
+            if (!gameboard.getToken(i, i).getSymbol().equals(firstTokenUL.getSymbol()))
+            {
+                firstTokenUL = Token.EMPTY;
+            }
+            if (!gameboard.getToken(i, gameboard.getSize() - i - 1).getSymbol().equals(firstTokenUR.getSymbol()))
+            {
+                firstTokenUR = Token.EMPTY;
+            }
+        }
+
+        if (firstTokenUL != Token.EMPTY)
+        {
+            return firstTokenUL;
+        }
+
+        return firstTokenUR;
+    }
+
+    /**
+     * End the game and declare a winner (or a tie).
+     *
+     * @param winnerToken The token of the winning player, or Token.EMPTY if there is a tie.
+     */
     public void endGame(Token winnerToken)
     {
-        if (winnerToken != null)
+        if (winnerToken != Token.EMPTY)
         {
             if (winnerToken == player1.getToken())
             {
@@ -143,32 +232,31 @@ public class TicTacToeController
                 player2.addWin();
                 winner = 2;
             }
+
+            notifyObservers();
         }
+        else
+        {
+            winner = 0;
+        }
+
         gameOver = true;
-        gameboard.notifyObservers();
-    }
-
-    public void startNewGame()
-    {
-        resetGameboard();
-        gameOver = false;
-        currentPlayer = 1;
-        gameboard.notifyObservers();
-    }
-
-    public void resetGameboard()
-    {
-        this.gameboard.reset();
     }
 
     /**
-     * Check if the game is over.
-     *
-     * @return True if the game is over, false otherwise.
+     * Start a new game of Tic Tac Toe.
      */
-    public boolean isGameOver()
+    public void startNewGame()
     {
-        return this.gameOver;
+        gameboard.reset();
+        gameOver = false;
+        currentPlayer = 1;
+
+        while (!gameOver)
+        {
+            String move = callback.getUserMove();
+            makeMove(move);
+        }
     }
 
     /**
@@ -176,23 +264,36 @@ public class TicTacToeController
      *
      * @return The game board.
      */
-    public Gameboard getGameboard()
+    public Token[][] getGameboardState()
     {
-        return gameboard;
+        return gameboard.getBoardState();
     }
 
+    /**
+     * Get the current player's token.
+     *
+     * @return The current player's token.
+     */
     public Token getCurrentPlayerToken()
     {
         return currentPlayer == 1 ? player1.getToken() : player2.getToken();
     }
-    public int getPlayer1Wins() {
-        return player1.getWins();
+
+    /**
+     * Get the number of wins for each player.
+     *
+     * @return An array containing the number of wins for each player.
+     */
+    public int[] getPlayersScore()
+    {
+        return new int[] {player1.getWins(), player2.getWins()};
     }
 
-    public int getPlayer2Wins() {
-        return player2.getWins();
-    }
-
+    /**
+     * Get the number for the winner of the game.
+     *
+     * @return The winner of the game.
+     */
     public int getWinner()
     {
         return winner;

@@ -1,1 +1,1 @@
-javac -d target\classes src\main\java\is\hi\hbv202g\tictactoe\controller\*.java src\main\java\is\hi\hbv202g\tictactoe\model\*.java src\main\java\is\hi\hbv202g\tictactoe\model\observer\*.java src\main\java\is\hi\hbv202g\tictactoe\view\*.java src\main\java\is\hi\hbv202g\tictactoe\*.java
+javac -d target\classes src\main\java\is\hi\hbv202g\tictactoe\controller\*.java src\main\java\is\hi\hbv202g\tictactoe\model\*.java src\main\java\is\hi\hbv202g\tictactoe\model\gameBoardObserver\*.java src\main\java\is\hi\hbv202g\tictactoe\view\*.java src\main\java\is\hi\hbv202g\tictactoe\*.java
