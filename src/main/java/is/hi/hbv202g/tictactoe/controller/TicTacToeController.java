@@ -14,7 +14,7 @@ import is.hi.hbv202g.tictactoe.model.observer.ScoreObserver;
 public class TicTacToeController extends ScoreObservable
 {
     // Entities
-    private GameBoard gameboard;
+    private GameBoard gameBoard;
     private Player player1;
     private Player player2;
 
@@ -32,19 +32,35 @@ public class TicTacToeController extends ScoreObservable
      * @param player2                The game token for Player 2.
      * @param boardSize              The size of the game board.
      * @param callback               Callback to get User Input from View.
-     * @param boardGameBoardObserver The observer for the game board.
+     * @param gameBoardObserver The observer for the game board.
      * @param scoreObserver          The observer for the score.
      */
-    public TicTacToeController(Token player1, Token player2, int boardSize, UserInputCallback callback, GameBoardObserver boardGameBoardObserver, ScoreObserver scoreObserver)
+    public TicTacToeController(Token player1, Token player2, int boardSize, UserInputCallback callback, GameBoardObserver gameBoardObserver, ScoreObserver scoreObserver)
     {
         this.player1 = new Player(player1);
         this.player2 = new Player(player2);
-        this.gameboard = new GameBoard(boardSize);
+        this.gameBoard = new GameBoard(boardSize);
 
         this.callback = callback;
-        this.gameboard.attach(boardGameBoardObserver);
+        this.gameBoard.attach(gameBoardObserver);
 
         attach(scoreObserver);
+    }
+
+    /**
+     * Start a new game of Tic Tac Toe.
+     */
+    public void startNewGame()
+    {
+        gameBoard.reset();
+        gameOver = false;
+        currentPlayer = 1;
+
+        while (!gameOver)
+        {
+            String move = callback.getUserMove();
+            makeMove(move);
+        }
     }
 
     /**
@@ -52,7 +68,7 @@ public class TicTacToeController extends ScoreObservable
      *
      * @param move Location to place a new token.
      */
-    public void makeMove(String move)
+    private void makeMove(String move)
     {
         int row = Character.getNumericValue(move.charAt(0)) - 1;
         int col = Character.getNumericValue(move.charAt(1)) - 10;
@@ -62,7 +78,7 @@ public class TicTacToeController extends ScoreObservable
             return;
         }
 
-        gameboard.setToken(row, col, getCurrentPlayerToken());
+        gameBoard.setToken(row, col, getCurrentPlayerToken());
         switchPlayer();
         checkForWinner();
     }
@@ -76,14 +92,14 @@ public class TicTacToeController extends ScoreObservable
      */
     private boolean isValidMove(int row, int col)
     {
-        int size = gameboard.getSize();
+        int size = gameBoard.getSize();
 
         if (gameOver || row < 0 || row > size || col < 0 || col > size)
         {
             return false;
         }
 
-        return gameboard.getToken(row, col) == Token.EMPTY;
+        return gameBoard.getToken(row, col) == Token.EMPTY;
     }
 
     /**
@@ -97,7 +113,7 @@ public class TicTacToeController extends ScoreObservable
     /**
      * Check if the game has been won.
      */
-    public void checkForWinner()
+    private void checkForWinner()
     {
         Token[] winner = new Token[3];
         winner[0] = checkRows();
@@ -113,7 +129,7 @@ public class TicTacToeController extends ScoreObservable
             }
         }
 
-        if (gameboard.isFull())
+        if (gameBoard.isFull())
         {
             endGame(Token.EMPTY);
         }
@@ -126,7 +142,7 @@ public class TicTacToeController extends ScoreObservable
      */
     private Token checkRows()
     {
-        for (Token[] tokenRow : gameboard.getBoardState())
+        for (Token[] tokenRow : gameBoard.getBoardState())
         {
             Token firstToken = tokenRow[0];
             
@@ -156,15 +172,15 @@ public class TicTacToeController extends ScoreObservable
      */
     private Token checkColumns()
     {
-        for (int i = 0; i < gameboard.getSize(); i++)
+        for (int i = 0; i < gameBoard.getSize(); i++)
         {
-            Token firstToken = gameboard.getToken(0, i);
+            Token firstToken = gameBoard.getToken(0, i);
             
             if (firstToken != Token.EMPTY)
             {
-                for (int j = 0; j < gameboard.getSize(); j++)
+                for (int j = 0; j < gameBoard.getSize(); j++)
                 {
-                    if (!gameboard.getToken(j, i).getSymbol().equals(firstToken.getSymbol()))
+                    if (!gameBoard.getToken(j, i).getSymbol().equals(firstToken.getSymbol()))
                     {
                         firstToken = Token.EMPTY;
                         break;
@@ -185,21 +201,21 @@ public class TicTacToeController extends ScoreObservable
      */
     private Token checkDiagonals()
     {
-        Token firstTokenUL = gameboard.getToken(0, 0);
-        Token firstTokenUR = gameboard.getToken(0, gameboard.getSize() - 1);
+        Token firstTokenUL = gameBoard.getToken(0, 0);
+        Token firstTokenUR = gameBoard.getToken(0, gameBoard.getSize() - 1);
 
         if (firstTokenUL == Token.EMPTY && firstTokenUR == Token.EMPTY)
         {
             return firstTokenUL;
         }
 
-        for (int i = 0; i < gameboard.getSize(); i++)
+        for (int i = 0; i < gameBoard.getSize(); i++)
         {
-            if (!gameboard.getToken(i, i).getSymbol().equals(firstTokenUL.getSymbol()))
+            if (!gameBoard.getToken(i, i).getSymbol().equals(firstTokenUL.getSymbol()))
             {
                 firstTokenUL = Token.EMPTY;
             }
-            if (!gameboard.getToken(i, gameboard.getSize() - i - 1).getSymbol().equals(firstTokenUR.getSymbol()))
+            if (!gameBoard.getToken(i, gameBoard.getSize() - i - 1).getSymbol().equals(firstTokenUR.getSymbol()))
             {
                 firstTokenUR = Token.EMPTY;
             }
@@ -218,7 +234,7 @@ public class TicTacToeController extends ScoreObservable
      *
      * @param winnerToken The token of the winning player, or Token.EMPTY if there is a tie.
      */
-    public void endGame(Token winnerToken)
+    private void endGame(Token winnerToken)
     {
         if (winnerToken != Token.EMPTY)
         {
@@ -244,29 +260,13 @@ public class TicTacToeController extends ScoreObservable
     }
 
     /**
-     * Start a new game of Tic Tac Toe.
-     */
-    public void startNewGame()
-    {
-        gameboard.reset();
-        gameOver = false;
-        currentPlayer = 1;
-
-        while (!gameOver)
-        {
-            String move = callback.getUserMove();
-            makeMove(move);
-        }
-    }
-
-    /**
      * Get the current Tokens on the game board.
      *
      * @return The game board.
      */
     public Token[][] getGameboardState()
     {
-        return gameboard.getBoardState();
+        return gameBoard.getBoardState();
     }
 
     /**

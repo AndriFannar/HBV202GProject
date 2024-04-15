@@ -80,10 +80,9 @@ public class TicTacToeView implements GameBoardObserver, ScoreObserver, UserInpu
      * @return The user's token.
      */
     private Token getPlayerToken() {
-        System.out.print("Player 1, please choose a token (X or O): ");
-
         String playerToken = "";
         while (!playerToken.equalsIgnoreCase("x") && !playerToken.equalsIgnoreCase("o")) {
+            System.out.print("Player 1, please choose a token (X or O): ");
             playerToken = getUserInput().toUpperCase();
         }
 

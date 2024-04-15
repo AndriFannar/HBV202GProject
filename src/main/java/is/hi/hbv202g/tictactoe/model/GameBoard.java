@@ -62,25 +62,25 @@ public class GameBoard extends GameBoardObservable
     /**
      * Get the token in the specified position.
      *
-     * @param i The row of the token.
-     * @param j The column of the token.
+     * @param row The row of the token.
+     * @param col The column of the token.
      * @return  The token in the specified position.
      */
-    public Token getToken(int i, int j)
+    public Token getToken(int row, int col)
     {
-        return board[i][j];
+        return board[row][col];
     }
 
     /**
      * Set the token in the specified position.
      *
-     * @param i     The row of the token.
-     * @param j     The column of the token.
+     * @param row   The row of the token.
+     * @param col   The column of the token.
      * @param token The token to set.
      */
-    public void setToken(int i, int j, Token token)
+    public void setToken(int row, int col, Token token)
     {
-        board[i][j] = token;
+        board[row][col] = token;
         notifyObservers();
     }
 

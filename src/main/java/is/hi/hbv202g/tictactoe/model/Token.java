@@ -5,8 +5,17 @@ package is.hi.hbv202g.tictactoe.model;
  */
 public enum Token
 {
+    /**
+     * The X token.
+     */
     X,
+    /**
+     * The O token.
+     */
     O,
+    /**
+     * A token that represents an empty cell.
+     */
     EMPTY;
 
     /**
