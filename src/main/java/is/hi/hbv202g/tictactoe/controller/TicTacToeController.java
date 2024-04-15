@@ -42,9 +42,12 @@ public class TicTacToeController extends ScoreObservable
         this.gameBoard = new GameBoard(boardSize);
 
         this.callback = callback;
-        this.gameBoard.attach(gameBoardObserver);
 
-        attach(scoreObserver);
+        if (gameBoardObserver != null)
+            this.gameBoard.attach(gameBoardObserver);
+
+        if (scoreObserver != null)
+            this.attach(scoreObserver);
     }
 
     /**
@@ -68,7 +71,7 @@ public class TicTacToeController extends ScoreObservable
      *
      * @param move Location to place a new token.
      */
-    private void makeMove(String move)
+    public void makeMove(String move)
     {
         int row = Character.getNumericValue(move.charAt(0)) - 1;
         int col = Character.getNumericValue(move.charAt(1)) - 10;
@@ -90,11 +93,11 @@ public class TicTacToeController extends ScoreObservable
      * @param col The column the move is in.
      * @return    True if the move is valid, false otherwise.
      */
-    private boolean isValidMove(int row, int col)
+    public boolean isValidMove(int row, int col)
     {
         int size = gameBoard.getSize();
 
-        if (gameOver || row < 0 || row > size || col < 0 || col > size)
+        if (gameOver || row < 0 || row > size - 1 || col < 0 || col > size - 1)
         {
             return false;
         }
