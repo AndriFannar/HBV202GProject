@@ -1,7 +1,7 @@
 package is.hi.hbv202g.tictactoe.view;
 
 import is.hi.hbv202g.tictactoe.controller.TicTacToeController;
-import is.hi.hbv202g.tictactoe.model.UserInputCallback;
+import is.hi.hbv202g.tictactoe.model.UserInputStrategy;
 import is.hi.hbv202g.tictactoe.model.Token;
 import is.hi.hbv202g.tictactoe.model.observer.GameBoardObserver;
 import is.hi.hbv202g.tictactoe.model.observer.ScoreObserver;
@@ -11,7 +11,7 @@ import java.util.Scanner;
 /**
  * A view for a Tic Tac Toe game.
  */
-public class TicTacToeView implements GameBoardObserver, ScoreObserver, UserInputCallback
+public class TicTacToeView implements GameBoardObserver, ScoreObserver, UserInputStrategy
 {
     private TicTacToeController controller;
     private Scanner scanner;

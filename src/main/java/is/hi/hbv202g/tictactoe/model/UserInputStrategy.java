@@ -1,9 +1,9 @@
 package is.hi.hbv202g.tictactoe.model;
 
 /**
- * Interface for user input callbacks.
+ * Interface for user input strategies.
  */
-public interface UserInputCallback
+public interface UserInputStrategy
 {
     /**
      * Get the user's next move.

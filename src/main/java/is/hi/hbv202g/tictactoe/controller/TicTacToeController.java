@@ -2,7 +2,7 @@ package is.hi.hbv202g.tictactoe.controller;
 
 import is.hi.hbv202g.tictactoe.model.GameBoard;
 import is.hi.hbv202g.tictactoe.model.Player;
-import is.hi.hbv202g.tictactoe.model.UserInputCallback;
+import is.hi.hbv202g.tictactoe.model.UserInputStrategy;
 import is.hi.hbv202g.tictactoe.model.Token;
 import is.hi.hbv202g.tictactoe.model.observer.GameBoardObserver;
 import is.hi.hbv202g.tictactoe.model.observer.ScoreObservable;
@@ -23,7 +23,7 @@ public class TicTacToeController extends ScoreObservable
     private int currentPlayer = 1;
     private boolean gameOver  = false;
 
-    private UserInputCallback callback;
+    private UserInputStrategy strategy;
 
     /**
      * Construct a new TicTacToeController.
@@ -31,17 +31,17 @@ public class TicTacToeController extends ScoreObservable
      * @param player1                The game token for Player 1.
      * @param player2                The game token for Player 2.
      * @param boardSize              The size of the game board.
-     * @param callback               Callback to get User Input from View.
-     * @param gameBoardObserver The observer for the game board.
+     * @param strategy               Callback to get User Input from View.
+     * @param gameBoardObserver      The observer for the game board.
      * @param scoreObserver          The observer for the score.
      */
-    public TicTacToeController(Token player1, Token player2, int boardSize, UserInputCallback callback, GameBoardObserver gameBoardObserver, ScoreObserver scoreObserver)
+    public TicTacToeController(Token player1, Token player2, int boardSize, UserInputStrategy strategy, GameBoardObserver gameBoardObserver, ScoreObserver scoreObserver)
     {
         this.player1 = new Player(player1);
         this.player2 = new Player(player2);
         this.gameBoard = new GameBoard(boardSize);
 
-        this.callback = callback;
+        this.strategy = strategy;
 
         if (gameBoardObserver != null)
             this.gameBoard.attach(gameBoardObserver);
@@ -61,7 +61,7 @@ public class TicTacToeController extends ScoreObservable
 
         while (!gameOver)
         {
-            String move = callback.getUserMove();
+            String move = strategy.getUserMove();
             makeMove(move);
         }
     }
@@ -300,5 +300,15 @@ public class TicTacToeController extends ScoreObservable
     public int getWinner()
     {
         return winner;
+    }
+
+    /**
+     * Set the User Input Strategy for the controller.
+     *
+     * @param strategy The User Input Strategy to use.
+     */
+    public void setUserInputStrategy(UserInputStrategy strategy)
+    {
+        this.strategy = strategy;
     }
 }
