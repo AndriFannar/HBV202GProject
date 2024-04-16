@@ -146,6 +146,21 @@ public class TicTacToeControllerTest
         assert controller.getWinner() == 2;
     }
 
+    @Test
+    public void testWinRowXLargerThan3()
+    {
+        controller = new TicTacToeController(player1, player2, 5, null, null, null);
+
+        String[] moves = new String[] {"1A", "2A", "1B", "2B", "1C", "2C", "1D", "2D", "1E"};
+
+        for (String move : moves)
+        {
+            controller.makeMove(move);
+        }
+
+        assert controller.getWinner() == 1;
+    }
+
     /**
      * Tests that X wins when a column is filled with X tokens.
      */
