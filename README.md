@@ -21,6 +21,7 @@ To run the project and start the game, run the following command in the root dir
 ```mvn exec:java```
 
 If you don't have an IDE, you can also run the project using the script file [run](run.cmd) which is located in the root directory of the project.
+* The project has to have been first compiled using `mvn compile` or the [compile](compile.cmd) batch file.
 
 ### Package
 To package the project into a JAR file, run the following command in the root directory of the project:
@@ -33,6 +34,8 @@ The JAR file will be located in the [target](target/TicTacToe.jar) directory.
 To run the JAR file created by Maven, run the script file [runmvnjar](runmvnjar.cmd) which is located in the root directory of the project.
 
 To run the JAR file created by the script file, run the script file [runjar](runjar.cmd) which is located in the root directory of the project.
+* The project has to have been first packaged using `mvn package` or the [package](package.cmd) batch file.
+  * Since the JAR file can be generated like the `class` files or Maven Site, it is not included in the repository.
 
 ### Test
 To run the tests for the project, run the following command in the root directory of the project:
