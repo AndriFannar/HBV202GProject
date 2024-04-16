@@ -3,6 +3,10 @@ package is.hi.hbv202g.tictactoe.controller;
 import is.hi.hbv202g.tictactoe.model.Token;
 import org.junit.*;
 
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
+
 /**
  * Tests for the TicTacToeController.
  */
@@ -40,7 +44,7 @@ public class TicTacToeControllerTest
     {
         String move = "1A";
         controller.makeMove(move);
-        assert controller.getGameboardState()[0][0] == player1;
+        assertSame("Player 1's token should be in the top-left corner", controller.getGameboardState()[0][0], player1);
     }
 
     /**
@@ -51,7 +55,7 @@ public class TicTacToeControllerTest
     {
         String move = "5V";
         controller.makeMove(move);
-        assert controller.getGameboardState()[0][0] == Token.EMPTY;
+        assertTrue("Invalid move should not be accepted", Arrays.stream(controller.getGameboardState()).allMatch(row -> Arrays.stream(row).allMatch(cell -> cell == Token.EMPTY)));
     }
 
     /**
@@ -63,7 +67,7 @@ public class TicTacToeControllerTest
         String move = "1A";
         controller.makeMove(move);
         controller.makeMove(move);
-        assert controller.getGameboardState()[0][0] != player2;
+        assertNotSame("Player 2's token should not replace Player 1's token in the top-left corner", controller.getGameboardState()[0][0], player2);
     }
 
     /**
@@ -76,7 +80,7 @@ public class TicTacToeControllerTest
         controller.makeMove(move);
         String moveP2 = "1B";
         controller.makeMove(moveP2);
-        assert controller.getGameboardState()[0][1] == player2;
+        assertSame("The Token in the top-middle should be Player 2's token", controller.getGameboardState()[0][1], player2);
     }
 
     /**
@@ -87,7 +91,7 @@ public class TicTacToeControllerTest
     {
         int row = 0;
         int col = 0;
-        assert controller.isValidMove(row, col);
+        assertTrue("Valid move should be valid", controller.isValidMove(row, col));
     }
 
     /**
@@ -98,7 +102,7 @@ public class TicTacToeControllerTest
     {
         int row = 3;
         int col = 3;
-        assert !controller.isValidMove(row, col);
+        assertFalse("Invalid move out of bounds should return false", controller.isValidMove(row, col));
     }
 
     /**
@@ -111,7 +115,7 @@ public class TicTacToeControllerTest
         controller.makeMove(move);
         int row = 0;
         int col = 0;
-        assert !controller.isValidMove(row, col);
+        assertFalse("Move on a occupied space should return false", controller.isValidMove(row, col));
     }
 
     /**
@@ -127,7 +131,7 @@ public class TicTacToeControllerTest
             controller.makeMove(move);
         }
 
-        assert controller.getWinner() == 1;
+        assertSame("Player 1 should win after row has been filled with X", controller.getWinner(), 1);
     }
 
     /**
@@ -143,7 +147,7 @@ public class TicTacToeControllerTest
             controller.makeMove(move);
         }
 
-        assert controller.getWinner() == 2;
+        assertSame("Player 2 should win after row has been filled with O", controller.getWinner(), 2);
     }
 
     /**
@@ -161,7 +165,7 @@ public class TicTacToeControllerTest
             controller.makeMove(move);
         }
 
-        assert controller.getWinner() == 1;
+        assertSame("Player 1 should win after a row has been filled even on a larger board", controller.getWinner(), 1);
     }
 
     /**
@@ -177,7 +181,7 @@ public class TicTacToeControllerTest
             controller.makeMove(move);
         }
 
-        assert controller.getWinner() == 1;
+        assertSame("Player 1 should win after column has been filled with X", controller.getWinner(), 1);
     }
 
     /**
@@ -193,7 +197,7 @@ public class TicTacToeControllerTest
             controller.makeMove(move);
         }
 
-        assert controller.getWinner() == 2;
+        assertSame("Player 2 should win after column has been filled with O", controller.getWinner(), 2);
     }
 
     /**
@@ -209,7 +213,7 @@ public class TicTacToeControllerTest
             controller.makeMove(move);
         }
 
-        assert controller.getWinner() == 1;
+        assertSame("Player 1 should win after diagonal has been filled with X", controller.getWinner(), 1);
     }
 
     /**
@@ -225,7 +229,7 @@ public class TicTacToeControllerTest
             controller.makeMove(move);
         }
 
-        assert controller.getWinner() == 2;
+        assertSame("Player 2 should win after diagonal has been filled with O", controller.getWinner(), 2);
     }
 
     /**
@@ -241,7 +245,7 @@ public class TicTacToeControllerTest
             controller.makeMove(move);
         }
 
-        assert controller.getWinner() == 0;
+        assertSame("No player should win when the gameboard has been filled", controller.getWinner(), 0);
     }
 
     /**
@@ -250,7 +254,7 @@ public class TicTacToeControllerTest
     @Test
     public void testGetCurrentPlayerToken()
     {
-        assert controller.getCurrentPlayerToken() == player1;
+        assertSame("Player 1 should be the current player at the start", controller.getCurrentPlayerToken(), player1);
     }
 
     /**
@@ -259,9 +263,9 @@ public class TicTacToeControllerTest
     @Test
     public void testGetCurrentPlayerTokenSwitch()
     {
-        assert controller.getCurrentPlayerToken() == player1;
+        assertSame("Player 1 should be the current player at the start", controller.getCurrentPlayerToken(), player1);
         String move = "1A";
         controller.makeMove(move);
-        assert controller.getCurrentPlayerToken() == player2;
+        assertSame("Player 2 should be the current after player 1 has made a move", controller.getCurrentPlayerToken(), player2);
     }
 }
