@@ -48,6 +48,7 @@ public class GameBoardTest
     @Test
     public void testReset()
     {
+        gameBoard.setToken(1, 1, Token.X);
         gameBoard.reset();
         for (int i = 0; i < gameBoard.getSize(); i++)
         {
@@ -81,11 +82,6 @@ public class GameBoardTest
     @Test
     public void testIsFullWhenGameBoardIsEmpty()
     {
-        // kannski ætti ég ekki að nota aðra aðferð hérna án
-        // þess að vita hvort hún virki yfirhöfuð? as in hún er líka prófuð fyrir
-        // ofan þannig ef hún myndi klikka væri þetta test case líka að klikka
-        gameBoard.reset();
-        // þetta fyrir neðan í staðinn fyrir reset?
         for (int i = 0; i < gameBoard.getSize(); i++)
         {
             for (int j = 0; j < gameBoard.getSize(); j++)
@@ -94,7 +90,7 @@ public class GameBoardTest
             }
         }
 
-        assertFalse("GameBoard should be empty",gameBoard.isFull());
+        assertFalse("GameBoard should not be full.",gameBoard.isFull());
     }
 
     /**
@@ -124,7 +120,7 @@ public class GameBoardTest
         {
             for (int j = 0; j < gameBoard.getSize(); j++)
             {
-                assertEquals("getBoardState and getToken should return the same Tokens.",boardState[i][j], gameBoard.getToken(i, j));
+                assertEquals("getBoardState and getToken should return the same Token.",boardState[i][j], gameBoard.getToken(i, j));
             }
         }
     }

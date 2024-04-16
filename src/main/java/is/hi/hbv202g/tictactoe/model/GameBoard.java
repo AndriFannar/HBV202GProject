@@ -64,7 +64,7 @@ public class GameBoard extends GameBoardObservable
      *
      * @param row The row of the token.
      * @param col The column of the token.
-     * @return  The token in the specified position.
+     * @return    The token in the specified position.
      */
     public Token getToken(int row, int col)
     {
