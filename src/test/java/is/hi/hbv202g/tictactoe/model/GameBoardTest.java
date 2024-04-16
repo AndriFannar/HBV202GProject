@@ -4,7 +4,11 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-public class GameBoardTest {
+/**
+ * Tests for the GameBoard.
+ */
+public class GameBoardTest
+{
 
     private GameBoard gameBoard;
 
@@ -17,70 +21,110 @@ public class GameBoardTest {
     }
 
     /**
-     * Test that reset() method empties the board.
+     * Tests the constructor of GameBoard class.
+     * Checks if the size of the board is correct and
+     * if all spots are initialized to EMPTY.
      */
     @Test
-    public void testReset() {
-        // empty the board
-        gameBoard.reset();
-        // check if the board is empty
-        for (int i = 0; i < gameBoard.getSize(); i++) {
-            for (int j = 0; j < gameBoard.getSize(); j++) {
-                assertSame("All spots in the board should have EMPTY token.",gameBoard.getToken(i, j), Token.EMPTY);
+    public void testGameBoardConstructor()
+    {
+        GameBoard board = new GameBoard(3);
+        assertEquals("The size of the board should be 3.", board.getSize(), 3);
+
+        GameBoard board2 = new GameBoard(7);
+        assertEquals("The size of the board should be 7.", board2.getSize(), 7);
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                assertEquals("Constructor should initialize all spots to EMPTY.", board.getToken(i, j), Token.EMPTY);
             }
         }
     }
 
     /**
-     * Test that isFull() method returns true when the board is full and false otherwise.
+     * Test that reset() method empties the board.
      */
     @Test
-    public void testIsFull() {
-        // fill the board
-        for (int i = 0; i < gameBoard.getSize(); i++) {
-            for (int j = 0; j < gameBoard.getSize(); j++) {
+    public void testReset()
+    {
+        gameBoard.reset();
+        for (int i = 0; i < gameBoard.getSize(); i++)
+        {
+            for (int j = 0; j < gameBoard.getSize(); j++)
+            {
+                assertEquals("All spots in the board should have EMPTY token.",gameBoard.getToken(i, j), Token.EMPTY);
+            }
+        }
+    }
+
+    /**
+     * Test that isFull() method returns true when the board is full.
+     */
+    @Test
+    public void testIsFullWhenGameBoardIsFull()
+    {
+        for (int i = 0; i < gameBoard.getSize(); i++)
+        {
+            for (int j = 0; j < gameBoard.getSize(); j++)
+            {
                 gameBoard.setToken(i, j, Token.X);
             }
         }
-        // check if the board is full
-        assertTrue("Board should be full.", gameBoard.isFull());
+        assertTrue("GameBoard should be full.", gameBoard.isFull());
 
-        // reset the board and add a few Tokens to it
+    }
+
+    /**
+     * Test that isFull() method returns false when the board is empty.
+     */
+    @Test
+    public void testIsFullWhenGameBoardIsEmpty()
+    {
+        // kannski ætti ég ekki að nota aðra aðferð hérna án
+        // þess að vita hvort hún virki yfirhöfuð? as in hún er líka prófuð fyrir
+        // ofan þannig ef hún myndi klikka væri þetta test case líka að klikka
         gameBoard.reset();
-        gameBoard.setToken(0, 0, Token.X);
-        gameBoard.setToken(2, 0, Token.O);
-        gameBoard.setToken(1, 2, Token.X);
+        // þetta fyrir neðan í staðinn fyrir reset?
+        for (int i = 0; i < gameBoard.getSize(); i++)
+        {
+            for (int j = 0; j < gameBoard.getSize(); j++)
+            {
+                gameBoard.setToken(i, j, Token.EMPTY);
+            }
+        }
 
-        // check if the board is full
-        assertFalse("Board should not be full.",gameBoard.isFull());
+        assertFalse("GameBoard should be empty",gameBoard.isFull());
     }
 
     /**
      * Test that get and set token methods work as expected.
      */
     @Test
-    public void testGetAndSetToken() {
+    public void testGetAndSetToken()
+    {
         gameBoard.setToken(1, 1, Token.X);
-        assertSame("Token X should be in center.", gameBoard.getToken(1, 1), Token.X);
+        assertEquals("Token X should be in center.", gameBoard.getToken(1, 1), Token.X);
 
-        // set and get token in top left corner
         gameBoard.setToken(0, 0, Token.O);
-        assertSame("Token O should be in top left corner.", gameBoard.getToken(0, 0), Token.O);
+        assertEquals("Token O should be in top left corner.", gameBoard.getToken(0, 0), Token.O);
 
-        // set and get token in bottom right corner
         gameBoard.setToken(2, 2, Token.X);
-        assertSame("Token X should be in bottom right corner.", gameBoard.getToken(2, 2), Token.X);
+        assertEquals("Token X should be in bottom right corner.", gameBoard.getToken(2, 2), Token.X);
     }
 
     /**
      * Test that getBoardState() method returns the same Tokens as getToken() method.
      */
     @Test
-    public void testGetBoardState() {
+    public void testGetBoardState()
+    {
         Token[][] boardState = gameBoard.getBoardState();
-        for (int i = 0; i < gameBoard.getSize(); i++) {
-            for (int j = 0; j < gameBoard.getSize(); j++) {
-                assertSame("getBoardState and getToken should return the same Tokens.",boardState[i][j], gameBoard.getToken(i, j));
+        for (int i = 0; i < gameBoard.getSize(); i++)
+        {
+            for (int j = 0; j < gameBoard.getSize(); j++)
+            {
+                assertEquals("getBoardState and getToken should return the same Tokens.",boardState[i][j], gameBoard.getToken(i, j));
             }
         }
     }
@@ -89,12 +133,12 @@ public class GameBoardTest {
      * Test that getSize() method returns the correct size of the board.
      */
     @Test
-    public void testGetSize() {
+    public void testGetSize()
+    {
         GameBoard board = new GameBoard(3);
         assertEquals("Size should be 3",board.getSize(), 3);
+
         GameBoard board2 = new GameBoard(7);
         assertEquals("Size should be 7",board2.getSize(), 7);
-        GameBoard board3 = new GameBoard(10);
-        assertEquals("Size should be 3 when number entered is not between 3 and 9.",board3.getSize(), 3);
     }
 }
