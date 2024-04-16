@@ -12,3 +12,4 @@ The project uses the Observer pattern twice, once for the state of the GameBoard
 
 The project also uses the Strategy pattern, where the TicTacToeController has a UserInputStrategy interface that is implemented by the TicTacToeView.
 * This was used to decouple the Controller from the View, and enable multiple implementations of the UserInputStrategy.
+* The UserInputStrategy could be used to implement a CPU player, or a networked player.

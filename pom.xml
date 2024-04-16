@@ -22,6 +22,21 @@
     <url>https://www.hi.is</url>
   </organization>
 
+  <developers>
+    <developer>
+      <id>andri</id>
+      <name>Andri Fannar Kristjánsson</name>
+      <email>afk6@hi.is</email>
+      <organization>University of Iceland</organization>
+    </developer>
+    <developer>
+      <id>sigridur</id>
+      <name>Sigríður H. Halldórsdóttir</name>
+      <email>shh60@hi.is</email>
+      <organization>University of Iceland</organization>
+    </developer>
+  </developers>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>21</java.version>
