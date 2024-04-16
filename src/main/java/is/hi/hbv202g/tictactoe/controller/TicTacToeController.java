@@ -32,7 +32,7 @@ public class TicTacToeController extends ScoreObservable
      * @param player2                The game token for Player 2.
      * @param boardSize              The size of the game board.
      * @param callback               Callback to get User Input from View.
-     * @param gameBoardObserver The observer for the game board.
+     * @param gameBoardObserver      The observer for the game board.
      * @param scoreObserver          The observer for the score.
      */
     public TicTacToeController(Token player1, Token player2, int boardSize, UserInputCallback callback, GameBoardObserver gameBoardObserver, ScoreObserver scoreObserver)
