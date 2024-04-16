@@ -146,6 +146,9 @@ public class TicTacToeControllerTest
         assert controller.getWinner() == 2;
     }
 
+    /**
+     * Tests that X wins when a row is filled with X tokens on a board larger than 3x3.
+     */
     @Test
     public void testWinRowXLargerThan3()
     {
